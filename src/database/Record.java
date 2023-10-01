@@ -2,7 +2,7 @@ package database;
 
 public class Record {
 
-    private String GAME_DATE_EST;
+    private long GAME_DATE_EST;
     private int TEAM_ID_home;
     private int PTS_HOME;
     private float FG_PCT_home;
@@ -12,7 +12,7 @@ public class Record {
     private int REB_home;
     private int HOME_TEAM_WINS;
 
-    public Record(String GAME_DATE_EST, int TEAM_ID_home, int PTS_HOME, float FG_PCT_home, float FT_PCT_home,
+    public Record(long GAME_DATE_EST, int TEAM_ID_home, int PTS_HOME, float FG_PCT_home, float FT_PCT_home,
                   float FG3_PCT_home, int AST_home, int REB_home, int HOME_TEAM_WINS) {
         this.GAME_DATE_EST = GAME_DATE_EST;
         this.TEAM_ID_home = TEAM_ID_home;
@@ -34,7 +34,7 @@ public class Record {
         );
     }
 
-    public String getGAME_DATE_EST() {
+    public long getGAME_DATE_EST() {
         return GAME_DATE_EST;
     }
 
