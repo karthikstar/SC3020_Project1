@@ -70,4 +70,8 @@ public class Record {
         return HOME_TEAM_WINS;
     }
 
+    public static int getSizeOfRecord() {
+        return 40;
+    }
+
 }
