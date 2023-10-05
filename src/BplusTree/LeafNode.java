@@ -53,7 +53,7 @@ public class LeafNode extends Node{
             this.mapping.put(key, records);
 
             this.keys = new ArrayList <Integer>();
-            insertSorted(this.keys, key);
+            sortedInsert(this.keys, key);
 
         // If key exists in LeafNode, just attach new address to existing key address list.
         } else if (this.mapping.containsKey(key) && this.keys.contains(key)) {
@@ -70,13 +70,27 @@ public class LeafNode extends Node{
             this.records.add(record);
 
             this.mapping.put(key, records);
-            insertSorted(this.keys, key);
+            sortedInsert(this.keys, key);
         }
 
         //For case where leafnode is full - Splitting of leaf node is necessary.
         else {
             this.addRecordSplit(key, record);
         }
+    }
+
+    public Node findNodeFromRoot (int key, Node root) {
+        if (root == null) {
+            return null;
+        } else {
+            for (Node child : ((NonLeafNode) root).getChildren()) {
+                Node answer = findNodeFromRoot (key, child);
+                if (answer != null) {
+                    return answer;
+                }
+            }
+        }
+        return null;
     }
     
 
