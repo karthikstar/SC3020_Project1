@@ -21,11 +21,11 @@ public class LeafNode extends Node{
      */
     private LeafNode leftNode;
 
-    public leafNode() {
+    public LeafNode() {
         super();
         setIsLeaf(true);
-        setRightNode(null);
-        setLeftNode(null);
+        setRight(null);
+        setLeft(null);
     }
 
     public ArrayList<Address> getAddressesPointedByKey (int key) {
@@ -75,15 +75,15 @@ public class LeafNode extends Node{
 
         //For case where leafnode is full - Splitting of leaf node is necessary.
         else {
-            this.addRecordSplit(key, record);
+            this.splitLeafNode(key, record);
         }
     }
 
-    public Node findNodeFromRoot (int key, Node root) {
-        if (root == null) {
+    public Node findNodeFromRoot (int key, Node node) {
+        if (node == null) {
             return null;
         } else {
-            for (Node child : ((NonLeafNode) root).getChildren()) {
+            for (Node child : ((NonLeafNode) node).getChildren()) {
                 Node answer = findNodeFromRoot (key, child);
                 if (answer != null) {
                     return answer;
@@ -92,8 +92,15 @@ public class LeafNode extends Node{
         }
         return null;
     }
-    
 
+    public void sortedInsert (ArrayList<Integer> keys, int key) {
+        for (int i = 0; i < keys.size(); i++) {
+            if (keys.get(i) >= key) {
+                keys.add(i, key);
+                return;
+            }
+        }
+    }
 
     public LeafNode getRight () {
         return this.rightNode;
@@ -110,14 +117,14 @@ public class LeafNode extends Node{
 
 
     public void deleteLeafNodeContents () {
-        LOLkeys.clear();
+        keys.clear();
         records.clear();
         // DO I DELETE POINTERS TO NEXT/PREV NODE TOO?
     }
 
     @Override
     public String toString() {
-        return String.format("\nLeaf Node Contents - \nBlocks: %s\nRecords: %s\nLeft Node: %s\nRight Node: %s", mapping.toString(), records, leftNode, rightNode)
+        return String.format("\nLeaf Node Contents - \nBlocks: %s\nRecords: %s\nLeft Node: %s\nRight Node: %s", mapping.toString(), records, leftNode, rightNode);
     }
 
 
