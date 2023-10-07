@@ -7,7 +7,13 @@ public class Main {
     private static final int MAX_DISK_CAPACITY_DEFAULT = (int) Math.pow(10, 6) * 500;
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Welcome to DB!");
+        System.out.println("Welcome to..");
+        System.out.println("\n" +
+                "  ___   _ _____ _   ___   _   ___ ___ \n" +
+                " |   \\ /_\\_   _/_\\ | _ ) /_\\ / __| __|\n" +
+                " | |) / _ \\| |/ _ \\| _ \\/ _ \\\\__ \\ _| \n" +
+                " |___/_/ \\_\\_/_/ \\_\\___/_/ \\_\\___/___|\n" +
+                "                                      \n");
         File f = new File("games.txt");
 
         if (f.exists()) {

@@ -147,7 +147,7 @@ public class Disk {
     }
 
     public void runExptOne() {
-        System.out.println("-----EXPERIMENT ONE------");
+        System.out.println("---------EXPERIMENT ONE---------");
         System.out.printf("No. Of Records: %d\n" , this.getTotalNoOfRecords());
         System.out.printf("Size of a record: %d B\n", Record.getSizeOfRecord());
         System.out.printf("No. of records stored in a block: %d\n", Block.getNoOfRecordsPerBlock());
