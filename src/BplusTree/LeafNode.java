@@ -65,7 +65,7 @@ public class LeafNode extends Node{
         // Below: Cases where keys dont exist in partially filled leaf node.
 
         //This is for the case where leafnode is not full.
-        else if (this.keys.size() < NODE_SIZE) {
+        else if (this.keys.size() < 30) { // NODE_SIZE
             this.records = new ArrayList<Address> ();
             this.records.add(record);
 

@@ -25,12 +25,26 @@ public class DataInitialiser {
             BufferedReader br = new BufferedReader(new FileReader(filepath));
             String line;
             int count = 0;
+            int rowsWithMissingCount = 0;
+
             br.readLine(); // Skip 1st line, as it refers to the column names
 
             while ((line = br.readLine()) != null) {
+                int missingValueFlag = 0;
                 System.out.println(line); // Print each line to the console
                 count++;
                 String[] attributes = line.split("\t");
+
+                // Check if any of the attributes have missing values
+                for (String attr: attributes) {
+                    if(attr == ""){
+                        rowsWithMissingCount++;
+                        missingValueFlag = 1;
+                        break;
+                    }
+                }
+
+                if(missingValueFlag == 1) continue; // skip reading of this line, and go on to the next line
 
                 // Create a SimpleDateFormat object with the date format used in the file
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -71,6 +85,7 @@ public class DataInitialiser {
 
             br.close();
             System.out.println("Total no. of rows read: " + count);
+            System.out.println("Rows with missing values that were ignored: " + rowsWithMissingCount);
 
             disk.runExptOne();
 

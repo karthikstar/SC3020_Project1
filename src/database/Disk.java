@@ -64,6 +64,8 @@ public class Disk {
     private Address insertRecIntoBlock(int blockId, Record record) {
         int offset = blocks[blockId].addRecordToBlock(record);
 
+        usedBlocks.add(blockId);
+
         // Check if block still have available slots left
         if(!blocks[blockId].isBlockAvail()) {
             availBlocks.remove(blockId);
