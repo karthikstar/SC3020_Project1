@@ -120,18 +120,18 @@ public class DataInitialiser {
                     case 2:
                         Tree.runExptTwo(tree);
                         break;
-//                    case 3:
-//                        Tree.runExptThree();
-//                        break;
-//                    case 4:
-//                        Tree.runExptFour();
-//                        break;
-//                    case 5:
-//                        Tree.runExptFive();
-//                        break;
-//                    default:
-//                        System.out.println("Please select an option between 0 - 5!");
-//                        break;
+                    case 3:
+                        Tree.runExptThree(disk,tree);
+                        break;
+                    case 4:
+                        Tree.runExptFour(disk,tree);
+                        break;
+                    case 5:
+                        Tree.runExptFive(disk, tree);
+                        break;
+                    default:
+                        System.out.println("Please select an option between 0 - 5!");
+                        break;
                 }
 
             }

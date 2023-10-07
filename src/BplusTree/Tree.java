@@ -59,7 +59,41 @@ public class Tree {
         ExperimentStats stats = new ExperimentStats();
 
         long startTime = System.nanoTime();
-        ArrayList<Address> resultAdd = tree.searchKey(root, 0.5f);
+        ArrayList<Address> resultAddress = tree.searchKey(root, 0.5f);
+        long endTime = System.nanoTime();
+        double totalFG3PCTHome = 0;
+        int totalRecordCount = 0;
+        if (resultAddress != null) {
+            for (Address address : resultAddress) {
+                Record record = disk.retrieveRecord(address);
+                System.out.println(record);
+                totalFG3PCTHome += record.getFG3_PCT_home();
+                totalRecordCount++;
+            }
+        }
+        System.out.printf("\n\nNo. of Index Nodes the process accesses: %d\n", stats.getTotalNumberOfNodeReadQueries());
+        System.out.printf("No. of Data Blocks the process accesses: %d\n", disk.getNoOfBlockAccess());
+        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n",
+                (double) totalFG3PCTHome / totalRecordCount);
+        long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
+        System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
+        startTime = System.nanoTime();
+        int bruteForceAccessCount = disk.BFSearch(0.5f, 0.5f);
+        endTime = System.nanoTime();
+        System.out.printf("Number of Data Blocks Accessed by Brute Force: %d\n", bruteForceAccessCount);
+        System.out.printf("Linear Time Accessed by Brute Force: %d\n", endTime - startTime);
+        System.out.printf("No. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
+
+        System.out.println("-----END OF EXPERIMENT THREE------");
+    }
+
+    public static void runExptFour(Disk disk, Tree tree) {
+        System.out.println("---------EXPERIMENT FOUR---------");
+        ExperimentStats stats = new ExperimentStats();
+
+        System.out.println("Movies with the 'numVotes' from 30,000 to 40,000, both inclusively: ");
+        long startTime = System.nanoTime();
+        ArrayList<Address> resultAdd = tree.searchValuesInRange(0.6f, 1.0f, root);
         long endTime = System.nanoTime();
         double totalAverageRating = 0;
         int totalCount = 0;
@@ -67,38 +101,59 @@ public class Tree {
         if (resultAdd != null) {
             for (Address add : resultAdd) {
                 Record record = disk.retrieveRecord(add);
-                System.out.print("\n" + record);
+                System.out.print("\n From Indexing" + record);
                 results.add(record);
-                totalAverageRating += record.getAverageRating();
+                totalAverageRating += record.getFG3_PCT_home();
                 totalCount++;
             }
         }
         System.out.printf("\n\nNo. of Index Nodes the process accesses: %d\n", stats.getTotalNumberOfNodeReadQueries());
         System.out.printf("No. of Data Blocks the process accesses: %d\n", disk.getNoOfBlockAccess());
-        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n",
+        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f",
                 (double) totalAverageRating / totalCount);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
-        System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
+        System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n", duration);
         startTime = System.nanoTime();
-        int bruteForceAccessCount = disk.BFSearch(0.5f, 0.5f);
+        int bruteForceAccessCount = disk.BFSearch(0.6f, 1);
         endTime = System.nanoTime();
-        System.out.printf("Number of Data Blocks Accessed by Brute Force (numVotes = 500): %d\n", bruteForceAccessCount);
-        System.out.printf("Linear Time Accessed by Brute Force (numVotes = 500): %d\n", endTime - startTime);
-        System.out.printf("No. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
+        System.out.printf("Number of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): %d",
+                bruteForceAccessCount);
+        System.out.printf("\nLinear Time Accessed by Brute Force (30000<=numVotes<=40000): %d", endTime - startTime);
+        System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
 
-        System.out.println("-----END OF EXPERIMENT THREE------");
-    }
-
-    public static void runExptFour() {
-        System.out.println("---------EXPERIMENT FOUR---------");
-        ExperimentStats stats = new ExperimentStats();
         System.out.println("-----END OF EXPERIMENT FOUR------");
     }
 
-    public static void runExptFive() {
+    public static void runExptFive(Disk disk, Tree tree) {
         System.out.println("---------EXPERIMENT FIVE---------");
         ExperimentStats stats = new ExperimentStats();
+
+        System.out.println("-- Deleting all records with 'numVotes' of 1000 -- ");
+        long startTime = System.nanoTime();
+        ArrayList<Address> deletedAdd = tree.deleteKey(0.35f);
+
+        disk.removeRecord(deletedAdd);
+        long endTime = System.nanoTime();
+        System.out.printf("No. of Nodes in updated B+ tree: %d\n", stats.getTotalNumberOfNodes());
+        tree.countNumberOfLevels(tree.getRoot());
+        System.out.printf("No. of Levels in updated B+ tree: %d\n", stats.getTotalHeight());
+        System.out.printf("\nContent of the root node in updated B+ tree: %s\n", getRoot().keys);
+        long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
+        System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
+        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes=1000):");
+        startTime = System.nanoTime();
+        int bruteForceAccessCount = disk.BFSearch(0.35f);
+        endTime = System.nanoTime();
+        System.out.printf("Number of Data Blocks Accessed by Brute Force (numVotes = 1000): %d", bruteForceAccessCount);
+        System.out.printf("\nLinear Time Accessed by Brute Force (numVotes = 1000): %d", endTime - startTime);
+        System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
+
         System.out.println("-----END OF EXPERIMENT FIVE------");
+    }
+
+    public ArrayList<Address> deleteKey(float key) {
+        int lowerBound = checkForLowerBound(key);
+        return (removeNode(root, null, -1, -1, key));
     }
 
     public static Node getRoot() {
@@ -141,7 +196,7 @@ public class Tree {
 
     }
 
-    public ArrayList<Address> searchValuesInRange(int minKey, int maxKey, Node nodeToSearchFrom) {
+    public ArrayList<Address> searchValuesInRange(float minKey, float maxKey, Node nodeToSearchFrom) {
         ExperimentStats.addOneRangeQuery();
         ArrayList<Address> resultArray = new ArrayList<>();
         if (nodeToSearchFrom.isLeaf()) {
@@ -149,12 +204,12 @@ public class Tree {
             LeafNode leaf = (LeafNode) nodeToSearchFrom;
             while (true) {
                 if (ptrIndex == leaf.getNumberOfKeys()) {
-                    // No existing index error check.
-                    if (ptrIndex >= leaf.getNumberOfKeys()) throw new IllegalStateException("0 keys found due to invalid index.");
                     // No more next node to load.
                     if (leaf.getRight() == null) break;
                     // Iterate through the leaf nodes to find all relevant keys.
                     leaf = leaf.getRight();
+                    // No existing index error check.
+                    //if (ptrIndex >= leaf.getNumberOfKeys()) throw new IllegalStateException("0 keys found due to invalid index.");
                     ExperimentStats.addOneRangeQuery();
                     ptrIndex = 0;
                 }
@@ -163,7 +218,10 @@ public class Tree {
 
                 // Add record addresses to results.
                 float key = leaf.getKeyAtIndex(ptrIndex);
-                resultArray.addAll(leaf.getAddressesPointedByKey(key));
+                ArrayList<Address> addresses = leaf.getAddressesPointedByKey(key);
+                if (addresses != null) {
+                    resultArray.addAll(addresses);
+                }
 
                 ptrIndex++;
             }
@@ -243,34 +301,41 @@ public class Tree {
         return node.getSingleChild(lowerBoundIndex).getFirstKey();
     }
 
-    private int checkForLowerBound(float key) {
-
-        NonLeafNode node = (NonLeafNode) root;
-        boolean found = false;
+    public int checkForLowerBound(float key) {
+        Node node = root;
         float lowerbound = 0;
 
-        // loop from back to front to find the first key that is smaller than the key
-        for (int i = node.getNumberOfKeys() - 1; i >= 0; i--) {
-            if (key >= node.getKeyAtIndex(i)) {
-                node = (NonLeafNode) node.getSingleChild(i + 1);
-                found = true;
+        while (!node.isLeaf()) {
+            if (node instanceof NonLeafNode) {
+                NonLeafNode nonLeafNode = (NonLeafNode) node;
+                int i;
+                for (i = nonLeafNode.getNumberOfKeys() - 1; i >= 0; i--) {
+                    if (key >= nonLeafNode.getKeyAtIndex(i)) {
+                        break;
+                    }
+                }
+                node = nonLeafNode.getSingleChild(i + 1);
+            } else if (node instanceof LeafNode) {
                 break;
             }
         }
-        // all keys bigger than my key
-        if (!found && key < node.getKeyAtIndex(0)) {
-            node = (NonLeafNode) node.getSingleChild(0);
+
+        if (node.isLeaf()) {
+            LeafNode leafNode = (LeafNode) node;
+
+            while (!leafNode.isLeaf()) {
+                // Handle LeafNode here (if needed)
+                break;
+            }
+
+            lowerbound = leafNode.getKeyAtIndex(0);
         }
 
-        // loop till get leftmost key
-        while (!node.getSingleChild(0).isLeaf()) {
-            node = (NonLeafNode) node.getSingleChild(0);
-        }
-
-        lowerbound = node.getSingleChild(0).getKeyAtIndex(0);
         return (int) lowerbound;
-
     }
+
+
+
 
     public ArrayList<Address> removeRecord (float key) {
         float lowerBoundKey = findLowerBoundKey(key);
