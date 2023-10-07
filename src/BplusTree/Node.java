@@ -8,7 +8,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class Node {
-    private final int nodeSize = Tree.NODE_SIZE;
+    private final int nodeSize = 30 ; // Tree.NODE_SIZE;
     private final int minLeafNodeSize = (int) (Math.floor((nodeSize + 1) / 2));
     private final int minNonLeafNodeSize = (int) (Math.floor(nodeSize / 2));
 
@@ -58,7 +58,7 @@ public class Node {
             this.setIsRoot(false);
             parent.setIsRoot(true);
             parent.setIsLeaf(false);
-            Tree.setRoot(parent);
+//            Tree.setRoot(parent);
         } else {
             parent.setIsLeaf(false);
         }
@@ -351,7 +351,7 @@ public class Node {
             newRoot.addNewChild(this);
             newRoot.addNewChild(newNonLeaf);
 
-            Tree.setRoot(newRoot);
+//            Tree.setRoot(newRoot);
         }
     }
 }
