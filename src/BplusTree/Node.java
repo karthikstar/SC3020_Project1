@@ -2,27 +2,27 @@ package BplusTree;
 
 import database.Address;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
+
+import static BplusTree.Tree.NODE_SIZE;
 
 public class Node {
-    private final int nodeSize = 30 ; // Tree.NODE_SIZE;
+    private final int nodeSize = NODE_SIZE ; // Tree.NODE_SIZE;
     private final int minLeafNodeSize = (int) (Math.floor((nodeSize + 1) / 2));
     private final int minNonLeafNodeSize = (int) (Math.floor(nodeSize / 2));
+    private final Node root = Tree.getRoot();
 
     private boolean isRoot;
     private boolean isLeaf;
 
     private NonLeafNode parent;
 
-    public ArrayList<Integer> keys;
+    public ArrayList<Float> keys;
 
     public Node() {
         this.isRoot = false;
         this.isLeaf = false;
-        this.keys = new ArrayList<Integer>();
+        this.keys = new ArrayList<Float>();
     }
 
     public int getMinLeafNodeSize() {
@@ -50,7 +50,7 @@ public class Node {
     }
 
     public NonLeafNode getParent() {
-        return parent;
+        return this.parent;
     }
 
     public void setParent(NonLeafNode parent) {
@@ -58,45 +58,45 @@ public class Node {
             this.setIsRoot(false);
             parent.setIsRoot(true);
             parent.setIsLeaf(false);
-//            Tree.setRoot(parent);
+            Tree.setRoot(parent);
         } else {
             parent.setIsLeaf(false);
         }
         this.parent = parent;
     }
 
-    public ArrayList<Integer> getKeys() {return this.keys;}
-    public int getKeyAtIndex(int index) {
+    public ArrayList<Float> getKeys() {return this.keys;}
+    public Float getKeyAtIndex(int index) {
         return this.keys.get(index);
     }
-    public int getFirstKey () {
+    public Float getFirstKey () {
         return this.keys.get(0);
     }
-    public int getLastKey () {
+    public Float getLastKey () {
         return this.keys.get(this.keys.size() - 1);
     }
     public int getNumberOfKeys () {
         return this.keys.size();
     }
 
-    public void setKeyAtIndex(int index, int key) {
+    public void setKeyAtIndex(int index, float key) {
         this.keys.set(index, key);
     }
-    public void insertKeyAtIndex(int index, int key) {
+    public void insertKeyAtIndex(int index, float key) {
         this.keys.add(index, key);
     }
     public void removeLastKey() {
         this.keys.remove(keys.size()-1);
     }
-    public int removeKeyAtIndex (int index) {
+    public float removeKeyAtIndex (int index) {
         return this.keys.remove(index);
     }
 
-    public int binarySearchUpperBound(int l, int r, int key, boolean upperBound) {
+    public int binarySearchUpperBound(int l, int r, float key, boolean upperBound) {
         if (l > r) return l;
 
         int m = (l + r) / 2;
-        int midKey = getKeyAtIndex(m);
+        float midKey = getKeyAtIndex(m);
 
         if (midKey < key) {
             return binarySearchUpperBound(m + 1, r, key, upperBound);
@@ -109,26 +109,26 @@ public class Node {
         }
     }
 
-    public int binarySearchLowerBound(int key) {
-        return binarySearchLowerBound(0, getNumberOfKeys() - 1, key);
-    }
+//    public int checkForLowerBound(float key) {
+//        return binarySearchLowerBound(0, getNumberOfKeys() - 1, key);
+//    }
 
-    public int binarySearchLowerBound(int l, int r, int key) {
-        if (l > r) return l;
-        int m = (l + r) / 2;
-        int midKey = getKeyAtIndex(m);
+//    public int binarySearchLowerBound(int l, int r, float key) {
+//        if (l > r) return l;
+//        int m = (l + r) / 2;
+//        float midKey = getKeyAtIndex(m);
+//
+//        if (midKey < key) {
+//            return binarySearchLowerBound(m + 1, r, key);
+//        } else if (midKey > key) {
+//            return binarySearchLowerBound(l, m - 1, key);
+//        } else {
+//            while (m >= 0 && getKeyAtIndex(m) == key) m--;
+//            return m;
+//        }
+//    }
 
-        if (midKey < key) {
-            return binarySearchLowerBound(m + 1, r, key);
-        } else if (midKey > key) {
-            return binarySearchLowerBound(l, m - 1, key);
-        } else {
-            while (m >= 0 && getKeyAtIndex(m) == key) m--;
-            return m;
-        }
-    }
-
-    public int binarySearchUpperBound(int key, boolean upperBound) {
+    public int binarySearchUpperBound(float key, boolean upperBound) {
         return binarySearchUpperBound(0, getNumberOfKeys() - 1, key, upperBound);
     }
 
@@ -148,14 +148,22 @@ public class Node {
     }
 
 
-    public void sortedInsert (ArrayList<Integer> keys, int key) {
-        for (int i = 0; i < keys.size(); i++) {
-            if (keys.get(i) >= key) {
-                keys.add(i, key);
-                return;
-            }
+    public void sortedInsert (ArrayList<Float> keys, float key) {
+        int i = 0;
+
+        while (i < keys.size() && keys.get(i) < key) i++;
+        keys.add(i, key);
+        ensureSorted(keys);
+    }
+
+    public void ensureSorted(ArrayList<Float> keys) {
+        ArrayList<Float> copiedKeys = new ArrayList<>(keys);
+        Collections.sort(copiedKeys);
+        if (!keys.equals(copiedKeys)) {
+            System.out.println("Keys are not sorted!");
         }
     }
+
 
     public void insertChildToNonLeafNode (NonLeafNode parent, NonLeafNode child) {
         int i = 0;
@@ -168,18 +176,26 @@ public class Node {
     /**
      * Performs a key update with recursive key updates until the root.
      * @param index
-     * @param newkey
+     * @param newKey
      * @param leafUpdate
      */
-    public void updateKeysAfterDeletion (int index, int newkey, boolean leafUpdate) {
+    public void updateKeysAfterDeletion (int index, float newKey, boolean leafUpdate) {
         // Checker for Index Validity
         // Update keys for this index only if it is a non-leaf node.
-        if (index >= 0 && index < this.keys.size() && !leafUpdate) this.keys.set(index, newkey);
+        if (index >= 0 && index < this.keys.size() && !leafUpdate) this.keys.set(index, newKey);
         // Recursion occurs continuously as long as current node is not a root node.
-        if (this.parent != null){
-            int myIndex = parent.getChildren().indexOf(this);
-            if (myIndex > 0) parent.setKeyAtIndex(myIndex-1, keys.get(0));
-            parent.updateKeysAfterDeletion(myIndex-1, newkey, false);
+        if (parent != null && !parent.isLeaf()) {
+            int childIndex = parent.getChildren().indexOf(this);
+
+            if (childIndex >= 0) {
+                if (childIndex > 0) {
+                    parent.setKeyAtIndex(childIndex - 1, keys.get(0));
+
+                }
+                parent.updateKeysAfterDeletion(childIndex - 1, newKey, false);
+            }
+        } else if (parent != null && parent.isLeaf()) {
+            parent.updateKeysAfterDeletion(index, newKey, false);
         }
     }
 
@@ -200,7 +216,7 @@ public class Node {
                 index++;
             }
             // If nothing is inserted, just insert to the end.
-            if (insertedNode == false) {
+            if (!insertedNode) {
                 this.getParent().getChildren().add(newLeaf);
                 this.getParent().keys.add(newLeaf.getKeyAtIndex(0));
             }
@@ -219,10 +235,12 @@ public class Node {
 
     public void createNewParent (LeafNode newLeaf) {
         NonLeafNode newParent = new NonLeafNode();
+        ExperimentStats.addOneNode();
 
         newParent.addNewChild(this);
         newParent.addNewChild(newLeaf);
 
+        newParent.keys = new ArrayList<Float>();
         newParent.keys.add(newLeaf.getKeyAtIndex(0));
 
         this.setParent(newParent);
@@ -233,21 +251,22 @@ public class Node {
 
 
     //////////////// BELOW METHODS ARE FOR SPLITTING OF FULL LEAF/NON-LEAF NODES! //////////////////
-    public LeafNode leafNodeSplit(int key, Address newRecord) {
+    public LeafNode leafNodeSplit(float key, Address newRecord) {
         LeafNode currentLeaf = (LeafNode) (this);
         LeafNode newLeaf = new LeafNode();
+        ExperimentStats.addOneNode();
         currentLeaf.records = new ArrayList<Address>();
         currentLeaf.records.add(newRecord);
-        currentLeaf.mapping = new TreeMap<Integer, ArrayList<Address>>();
+        currentLeaf.mapping = new TreeMap<Float, ArrayList<Address>>();
         currentLeaf.mapping.put(key, currentLeaf.records);
 
         //// Leaving just enough nodes for the minimum leaf node size and moving the rest to new leaf node.
         int n = nodeSize - minLeafNodeSize + 1;
         int i = 0;
-        int moveFromKey = 0;
+        float moveFromKey = 0;
 
         // Iterate through the key-value entries in the leaf node's mapping until the nth entry is found. This entry's key will be used as the starting point for moving keys to the new leaf node.
-        for (Map.Entry<Integer, ArrayList<Address>> entry : currentLeaf.mapping.entrySet()) {
+        for (Map.Entry<Float, ArrayList<Address>> entry : currentLeaf.mapping.entrySet()) {
             if (i == n) {
                 moveFromKey = entry.getKey();
                 break;
@@ -256,22 +275,22 @@ public class Node {
         }
 
         // Use of sorted map to ensure that records inserted in new leaf node is sorted.
-        SortedMap<Integer, ArrayList<Address>> newMap = currentLeaf.mapping.subMap(moveFromKey, true, currentLeaf.mapping.lastKey(), true);
+        SortedMap<Float, ArrayList<Address>> newMap = currentLeaf.mapping.subMap(moveFromKey, true, currentLeaf.mapping.lastKey(), true);
 
         // Insert this new map into new leaf nodes mapping.
-        newLeaf.mapping = new TreeMap<Integer, ArrayList<Address>>(newMap);
+        newLeaf.mapping = new TreeMap<Float, ArrayList<Address>>(newMap);
         newMap.clear();
 
         // Add new key into this node's key.
         sortedInsert(this.keys, key);
         // Adding moved keys into the newLeaf's key list.
-        newLeaf.keys = new ArrayList<Integer>(this.keys.subList(n, this.keys.size()));// after nth index
+        newLeaf.keys = new ArrayList<Float>(this.keys.subList(n, this.keys.size()));// after nth index
         // Removing moved keys in this node.
         this.keys.subList(n, this.keys.size()).clear();
 
         // Used to allow both new leaf node and the current node's right node to correctly point at each other.
         if (currentLeaf.getRight() != null) {
-            newLeaf.setRight(((LeafNode) this).getRight());
+            newLeaf.setRight(currentLeaf.getRight());
             currentLeaf.getRight().setLeft(newLeaf);
         }
         // ELse do this if this node is already the rightmost leaf node.
@@ -284,13 +303,14 @@ public class Node {
     }
 
     public NonLeafNode nonLeafSplit() {
-        NonLeafNode currentNonLeaf = (NonLeafNode) (this);
+        NonLeafNode currentNonLeaf = (NonLeafNode) this;
         NonLeafNode newNonLeaf = new NonLeafNode();
+        ExperimentStats.addOneNode();
 
-        int moveFromKey = currentNonLeaf.getKeyAtIndex(minNonLeafNodeSize);
+        float moveFromKey = currentNonLeaf.getKeyAtIndex(minNonLeafNodeSize);
         for (int i = currentNonLeaf.getNumberOfKeys(); i > 0; i--) {
             if (currentNonLeaf.getKeyAtIndex(i - 1) < moveFromKey) break;
-            int currentKey = currentNonLeaf.getKeyAtIndex(i - 1);
+            float currentKey = currentNonLeaf.getKeyAtIndex(i - 1);
             Node currentChild = currentNonLeaf.getSingleChild(i);
 
             // Add children and keys to new non leaf node
@@ -305,7 +325,7 @@ public class Node {
         return newNonLeaf;
     }
 
-    public void splitLeafNode(int key, Address record) {
+    public void splitLeafNode(float key, Address record) {
 
         LeafNode newNode = this.leafNodeSplit(key, record);
 
@@ -338,8 +358,10 @@ public class Node {
         } else {
             // Need to create new root!
             NonLeafNode newRoot = new NonLeafNode();
+            ExperimentStats.addOneNode();
 
             // Remove first key from new non leaf node and add key to the parent.
+            newRoot.keys = new ArrayList<Float>();
             newRoot.keys.add(newNonLeaf.getKeyAtIndex(0));
             newNonLeaf.keys.remove(0);
 
@@ -351,7 +373,7 @@ public class Node {
             newRoot.addNewChild(this);
             newRoot.addNewChild(newNonLeaf);
 
-//            Tree.setRoot(newRoot);
+            Tree.setRoot(newRoot);
         }
     }
 }
