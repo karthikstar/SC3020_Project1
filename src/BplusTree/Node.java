@@ -65,6 +65,7 @@ public class Node {
         this.parent = parent;
     }
 
+    public ArrayList<Integer> getKeys() {return this.keys;}
     public int getKeyAtIndex(int index) {
         return this.keys.get(index);
     }
@@ -91,27 +92,44 @@ public class Node {
         return this.keys.remove(index);
     }
 
-    public int binarySearch(int l, int r, int key, boolean upperBound) {
+    public int binarySearchUpperBound(int l, int r, int key, boolean upperBound) {
         if (l > r) return l;
 
         int m = (l + r) / 2;
         int midKey = getKeyAtIndex(m);
 
         if (midKey < key) {
-            return binarySearch(m + 1, r, key, upperBound);
+            return binarySearchUpperBound(m + 1, r, key, upperBound);
         } else if (midKey > key) {
-            return binarySearch(l, m - 1, key, upperBound);
+            return binarySearchUpperBound(l, m - 1, key, upperBound);
         } else {
-            while (m < getNumberOfKeys() && getKeyAtIndex(m) == key)
-                m++;
-            if (!upperBound)
-                return m - 1;
+            while (m < getNumberOfKeys() && getKeyAtIndex(m) == key) m++;
+            if (!upperBound) return m - 1;
             return m;
         }
     }
 
-    public int binarySearchForKeyIndex (int key, boolean upperBound) {
-        return binarySearch(0, getNumberOfKeys() - 1, key, upperBound);
+    public int binarySearchLowerBound(int key) {
+        return binarySearchLowerBound(0, getNumberOfKeys() - 1, key);
+    }
+
+    public int binarySearchLowerBound(int l, int r, int key) {
+        if (l > r) return l;
+        int m = (l + r) / 2;
+        int midKey = getKeyAtIndex(m);
+
+        if (midKey < key) {
+            return binarySearchLowerBound(m + 1, r, key);
+        } else if (midKey > key) {
+            return binarySearchLowerBound(l, m - 1, key);
+        } else {
+            while (m >= 0 && getKeyAtIndex(m) == key) m--;
+            return m;
+        }
+    }
+
+    public int binarySearchUpperBound(int key, boolean upperBound) {
+        return binarySearchUpperBound(0, getNumberOfKeys() - 1, key, upperBound);
     }
 
     public boolean isNotFull () {
