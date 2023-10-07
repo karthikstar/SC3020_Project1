@@ -62,12 +62,17 @@ public class DataInitialiser {
                 Record newRecord = generateRecord(GAME_DATE_EST, TEAM_ID_home, PTS_HOME, FG_PCT_home, FT_PCT_home,
                         FG3_PCT_home, AST_home, REB_home, HOME_TEAM_WINS);
 
-//                Address addr = disk.writeRecToDisk(newRecord);
+                Address address = disk.writeRecToDisk(newRecord);
 
-                break;
+//                int key = newRecord.getFG_PCT_home();
+//                tree.inserKey()
+
             }
+
+            br.close();
             System.out.println("Total no. of rows read: " + count);
 
+            disk.runExptOne();
 
 
         } catch (IOException e) {
