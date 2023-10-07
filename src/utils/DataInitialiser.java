@@ -26,7 +26,7 @@ public class DataInitialiser {
             // Initialise Disk
             Disk disk = new Disk(BLOCK_SIZE, diskCapacity);
             // Initialise B+ Tree
-            // TODO: B+ Tree intitialisation
+            Tree tree = new Tree();
 
             BufferedReader br = new BufferedReader(new FileReader(filepath));
             String line;
@@ -84,10 +84,10 @@ public class DataInitialiser {
 
                 Address address = disk.writeRecToDisk(newRecord);
 
-//                int key = newRecord.getFG_PCT_home();
-//                tree.inserKey()
-
+                float key = newRecord.getFG_PCT_home();
+                tree.addRecord(key, address);
             }
+            tree.printBPlusTreeHelper(Tree.getRoot(), "");
 
             br.close();
             System.out.println("---------------");
@@ -95,7 +95,7 @@ public class DataInitialiser {
             System.out.println("Rows with missing values that will be ignored: " + rowsWithMissingCount);
             System.out.println("---------------");
 
-//            disk.runExptOne();
+            disk.runExptOne();
 
             while(true) {
                 System.out.println("Please select one of the options below: ");
@@ -118,20 +118,20 @@ public class DataInitialiser {
                         disk.runExptOne();
                         break;
                     case 2:
-                        Tree.runExptTwo();
+                        Tree.runExptTwo(tree);
                         break;
-                    case 3:
-                        Tree.runExptThree();
-                        break;
-                    case 4:
-                        Tree.runExptFour();
-                        break;
-                    case 5:
-                        Tree.runExptFive();
-                        break;
-                    default:
-                        System.out.println("Please select an option between 0 - 5!");
-                        break;
+//                    case 3:
+//                        Tree.runExptThree();
+//                        break;
+//                    case 4:
+//                        Tree.runExptFour();
+//                        break;
+//                    case 5:
+//                        Tree.runExptFive();
+//                        break;
+//                    default:
+//                        System.out.println("Please select an option between 0 - 5!");
+//                        break;
                 }
 
             }
