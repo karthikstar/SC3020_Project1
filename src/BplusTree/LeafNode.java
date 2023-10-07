@@ -5,6 +5,8 @@ import database.Address;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import static BplusTree.Tree.NODE_SIZE;
+
 public class LeafNode extends Node{
     /**
      * Simulates the mapping of each key (or pointer) to its respective set of records. An arraylist is used for each mapping to handle duplicate records for each key to point to. With no duplicates, array list will only contain 1 address.

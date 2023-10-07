@@ -29,4 +29,6 @@ public class NonLeafNode extends Node{
     public void deleteChild (Node deletingchild) {
         this.children.remove(deletingchild);
     }
+
+    public int getNumOfChildren () {return this.children.size();}
 }

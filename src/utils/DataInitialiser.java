@@ -16,6 +16,10 @@ import java.util.Scanner;
 public class DataInitialiser {
 
     public static final int BLOCK_SIZE = 400;
+    public static final int OVERHEAD = 8;
+    public static final int POINTER_SIZE = 8;
+    public static final int KEY_SIZE = 4;
+
     public static void readFile(String filepath, int diskCapacity) {
         try {
 
