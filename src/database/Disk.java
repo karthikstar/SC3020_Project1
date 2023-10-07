@@ -147,14 +147,15 @@ public class Disk {
     }
 
     /**
-     * Perform a brute-force (BF) linear scan method, by scanning data blocks 1 by one within the given range for FG_PCT_HOME
+     * Perform a brute-force (BF) linear scan method, by scanning data blocks 1 by one within the given lower limit and upper limit for FG_PCT_HOME
+     * For Expt.s 3 and 4
      * @param FG_PCT_HOME_LOWER_LIMIT lower limit of FG_PCT_home
      * @param FG_PCT_HOME_UPPER_LIMIT upper limit of FG_PCT_home
      * @return the number of data blocks accessed during the brute-force search
      */
     public int BFSearch(float FG_PCT_HOME_LOWER_LIMIT, float FG_PCT_HOME_UPPER_LIMIT) {
         Record record;
-        float FG_PCT_HOME_VALUE; // t
+        float FG_PCT_HOME_VALUE;
 
         ArrayList<Record> results = new ArrayList<>();
 
@@ -178,6 +179,47 @@ public class Disk {
         if(results.size() == 0) {
             System.out.printf("BFSearch - Records are not found for the given range: %f to %f\n",
                     FG_PCT_HOME_LOWER_LIMIT, FG_PCT_HOME_UPPER_LIMIT);
+        }
+
+        for(Record result: results){
+            System.out.printf("BFSearch - Found Record: %s\n", result);
+        }
+
+        return noOfBlocksAccessed;
+    }
+
+    /**
+     * Perform a brute-force (BF) linear scan method, by scanning data blocks 1 that satisfy the given lower limit
+     * For Expt 5
+     * @param FG_PCT_HOME_LOWER_LIMIT lower limit of FG_PCT_home
+     * @return the number of data blocks accessed during the brute-force search
+     */
+    public int BFSearch(float FG_PCT_HOME_LOWER_LIMIT) {
+        Record record;
+        float FG_PCT_HOME_VALUE;
+
+        ArrayList<Record> results = new ArrayList<>();
+
+        int noOfBlocksAccessed = 0;
+        for (int blockPtr: usedBlocks) {
+            noOfBlocksAccessed++;
+            Block block = blocks[blockPtr];
+
+            int currentNoOfRecordsInBlock = block.getCurrentNoOfRecords();
+            for (int j = 0 ; j < currentNoOfRecordsInBlock; j++) {
+                record = block.retrieveRecordFromBlock(j);
+                FG_PCT_HOME_VALUE = record.getFG_PCT_home();
+
+                // if within range, add to results arraylist
+                if(FG_PCT_HOME_VALUE <= FG_PCT_HOME_LOWER_LIMIT) {
+                    results.add(record);
+                }
+            }
+        }
+
+        if(results.size() == 0) {
+            System.out.printf("BFSearch - Records are not found for the given range <= %f\n",
+                    FG_PCT_HOME_LOWER_LIMIT);
         }
 
         for(Record result: results){
