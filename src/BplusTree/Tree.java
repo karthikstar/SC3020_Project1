@@ -46,11 +46,11 @@ public class Tree {
     public static void runExptTwo(Tree tree) {
         System.out.println("---------EXPERIMENT TWO---------");
         ExperimentStats stats = new ExperimentStats();
-        System.out.println("Parameter n: " + NODE_SIZE);
-        System.out.printf("Number of Nodes: %d\n", stats.getTotalNumberOfNodes());
+        System.out.println("Parameter n of the B+ tree: " + NODE_SIZE);
+        System.out.printf("Number of nodes of the B+ tree: %d\n", stats.getTotalNumberOfNodes());
         tree.countNumberOfLevels(Tree.getRoot());
-        System.out.printf("Number of Levels: %d\n", stats.getTotalHeight());
-        System.out.println("Root Node Contents: " + Tree.getRoot().keys);
+        System.out.printf("Number of Levels of the B+ tree: %d\n", stats.getTotalHeight());
+        System.out.println("Contents Of the Root Node: " + Tree.getRoot().keys);
         System.out.println("-----END OF EXPERIMENT TWO------");
     }
 
@@ -66,14 +66,14 @@ public class Tree {
         if (resultAddress != null) {
             for (Address address : resultAddress) {
                 Record record = disk.retrieveRecord(address);
-                System.out.println(record);
+                System.out.print("\n B+TreeSearch - Found " + record);
                 totalFG3PCTHome += record.getFG3_PCT_home();
                 totalRecordCount++;
             }
         }
         System.out.printf("\n\nNo. of Index Nodes the process accesses: %d\n", stats.getTotalNumberOfNodeReadQueries());
         System.out.printf("No. of Data Blocks the process accesses: %d\n", disk.getNoOfBlockAccess());
-        System.out.printf("Average of 'FG3_PCT_home' of the records accessed: %.2f\n",
+        System.out.printf("Average of 'FG3_PCT_home' of the records returned: %.2f\n",
                 (double) totalFG3PCTHome / totalRecordCount);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
@@ -81,8 +81,8 @@ public class Tree {
         int bruteForceAccessCount = disk.BFSearch(0.5f, 0.5f);
         endTime = System.nanoTime();
         System.out.printf("Number of Data Blocks Accessed by Brute Force: %d\n", bruteForceAccessCount);
-        System.out.printf("Linear Time Accessed by Brute Force: %d\n", endTime - startTime);
-        System.out.printf("No. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
+        System.out.printf("Linear Time Accessed by Brute Force: %d nanoseconds\n", endTime - startTime);
+        System.out.printf("Reduction In No. of Data Blocks accessed due to LRU Cache: %d\n ", disk.getNoOfBlockAccessReduced());
 
         System.out.println("-----END OF EXPERIMENT THREE------");
     }
@@ -91,7 +91,7 @@ public class Tree {
         System.out.println("---------EXPERIMENT FOUR---------");
         ExperimentStats stats = new ExperimentStats();
 
-        System.out.println("Movies with the attribute 'FG_PCT_home' from 0.6 to 1.0, both inclusively: ");
+        System.out.println("Records with the attribute 'FG_PCT_home' from 0.6 to 1.0, both inclusively: ");
         long startTime = System.nanoTime();
         ArrayList<Address> resultAdd = tree.searchValuesInRange(0.6f, 1.0f, root);
         long endTime = System.nanoTime();
@@ -101,7 +101,7 @@ public class Tree {
         if (resultAdd != null) {
             for (Address add : resultAdd) {
                 Record record = disk.retrieveRecord(add);
-                System.out.print("\n From Indexing" + record);
+                System.out.print("\n B+TreeSearch - Found " + record);
                 results.add(record);
                 totalFG3PCTHome += record.getFG3_PCT_home();
                 totalCount++;
@@ -111,15 +111,15 @@ public class Tree {
         System.out.printf("No. of Data Blocks the process accesses: %d\n", disk.getNoOfBlockAccess());
         System.out.printf("Average of 'FG3_PCT_home' of the records accessed: %.2f",
                 (double) totalFG3PCTHome / totalCount);
-        long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
+        long duration = (endTime - startTime);
         System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n", duration);
         startTime = System.nanoTime();
         int bruteForceAccessCount = disk.BFSearch(0.6f, 1);
         endTime = System.nanoTime();
-        System.out.printf("Number of Data Blocks Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d",
+        System.out.printf("Number of Data Blocks Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d\n",
                 bruteForceAccessCount);
-        System.out.printf("\nLinear Time Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d", endTime - startTime);
-        System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
+        System.out.printf("Linear Time Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d nanoseconds\n", endTime - startTime);
+        System.out.printf("Reduction In No. of Data Blocks accessed due to LRU Cache: %d\n ", disk.getNoOfBlockAccessReduced());
 
         System.out.println("-----END OF EXPERIMENT FOUR------");
     }
@@ -144,9 +144,9 @@ public class Tree {
         startTime = System.nanoTime();
         int bruteForceAccessCount = disk.BFSearch(0.35f);
         endTime = System.nanoTime();
-        System.out.printf("Number of Data Blocks Accessed by Brute Force (FG_PCT_home <= 0.35): %d", bruteForceAccessCount);
-        System.out.printf("\nLinear Time Accessed by Brute Force (FG_PCT_home <= 0.35): %d", endTime - startTime);
-        System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
+        System.out.printf("Number of Data Blocks Accessed by Brute Force (FG_PCT_home <= 0.35): %d\n", bruteForceAccessCount);
+        System.out.printf("Linear Time Accessed by Brute Force (FG_PCT_home <= 0.35): %d nanoseconds\n", endTime - startTime);
+        System.out.printf("Reduction In No. of Data Blocks accessed due to LRU Cache: %d\n ", disk.getNoOfBlockAccessReduced());
 
         System.out.println("-----END OF EXPERIMENT FIVE------");
     }
