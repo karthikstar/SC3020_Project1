@@ -206,9 +206,9 @@ public class Disk {
                     FG_PCT_HOME_LOWER_LIMIT, FG_PCT_HOME_UPPER_LIMIT);
         }
 
-        for(Record result: results){
-            System.out.printf("BFSearch - Found %s\n", result);
-        }
+//        for(Record result: results){
+//            System.out.printf("BFSearch - Found %s\n", result);
+//        }
 
         return noOfBlocksAccessed;
     }
@@ -247,9 +247,9 @@ public class Disk {
                     FG_PCT_HOME_LOWER_LIMIT);
         }
 
-        for(Record result: results){
-            System.out.printf("BFSearch - Found %s\n", result);
-        }
+//        for(Record result: results){
+//            System.out.printf("BFSearch - Found %s\n", result);
+//        }
 
         return noOfBlocksAccessed;
     }

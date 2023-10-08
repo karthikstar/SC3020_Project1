@@ -56,6 +56,7 @@ public class Tree {
 
     public static void runExptThree(Disk disk, Tree tree) {
         System.out.println("---------EXPERIMENT THREE---------");
+        System.out.println("Please uncomment print line in Tree Class to see actual record being found.");
         ExperimentStats stats = new ExperimentStats();
 
         long startTime = System.nanoTime();
@@ -66,7 +67,7 @@ public class Tree {
         if (resultAddress != null) {
             for (Address address : resultAddress) {
                 Record record = disk.retrieveRecord(address);
-                System.out.print("\n B+TreeSearch - Found " + record);
+//                System.out.print("\n B+TreeSearch - Found " + record);
                 totalFG3PCTHome += record.getFG3_PCT_home();
                 totalRecordCount++;
             }
@@ -91,7 +92,8 @@ public class Tree {
         System.out.println("---------EXPERIMENT FOUR---------");
         ExperimentStats stats = new ExperimentStats();
 
-        System.out.println("Records with the attribute 'FG_PCT_home' from 0.6 to 1.0, both inclusively: ");
+//        System.out.println("Records with the attribute 'FG_PCT_home' from 0.6 to 1.0, both inclusively: ");
+        System.out.println("Please uncomment print line in Tree Class to see actual record being found.");
         long startTime = System.nanoTime();
         ArrayList<Address> resultAdd = tree.searchValuesInRange(0.6f, 1.0f, root);
         long endTime = System.nanoTime();
@@ -101,7 +103,7 @@ public class Tree {
         if (resultAdd != null) {
             for (Address add : resultAdd) {
                 Record record = disk.retrieveRecord(add);
-                System.out.print("\n B+TreeSearch - Found " + record);
+//                System.out.print("\n B+TreeSearch - Found " + record);
                 results.add(record);
                 totalFG3PCTHome += record.getFG3_PCT_home();
                 totalCount++;
