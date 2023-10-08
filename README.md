@@ -30,11 +30,12 @@ Tay Jia Ying, Denise
 3. Clone or download the project's source code from the project repository on GitHub.
 
 ### Running the Project
-4. Open the `Main.java` file located in the `src` folder in your preferred IDE.
-5. Run the `Main.java` file.
+4. Install SDK - 18 (Oracle Open JDK version 18.0.1)
+5. Open the `Main.java` file located in the `src` folder in your preferred IDE.
+6. Run the `Main.java` file.
 
 ### Usage
-6. Experiment results can be viewed in the terminal window's output.
+7. Experiment results can be viewed in the terminal window's output.
 
 
 
