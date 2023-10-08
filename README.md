@@ -12,7 +12,7 @@ Database - The Database package manages the storage infrastructure of our databa
 BplusTree - This package encompasses the core components related to the B+ tree implementation. It includes classes and methods for constructing and managing B+ trees, as well as support for search, insertion, and deletion operations.
 
 ## Team members
-This project was developed and maintained by the following team members:
+This project was developed and maintained by the following team members:  
 Amabel Lim Hui Xin   
 Elangovan Karthikeyan   
 Tan Puay Jun, Klaus  
