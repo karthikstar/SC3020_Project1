@@ -1,5 +1,8 @@
 package database;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Record {
 
     private long GAME_DATE_EST;
@@ -27,9 +30,14 @@ public class Record {
 
     @Override
     public String toString() {
+        // reformat the date from long data type to string for better viewability
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date(GAME_DATE_EST);
+        String formatted_GAME_DATE_EST = dateFormat.format(date);
+
         return String.format(
                 "Record: GAME DATE EST: %s, TEAM_ID_HOME: %d, PTS_HOME: %d, FG_PCT_home: %f, FT_PCT_home: %f, FG3_PCT_home: %f, AST_home: %d, REB_home: %d, HOME_TEAM_WINS: %d",
-                GAME_DATE_EST, TEAM_ID_home,  PTS_HOME,  FG_PCT_home,  FT_PCT_home,
+                formatted_GAME_DATE_EST, TEAM_ID_home,  PTS_HOME,  FG_PCT_home,  FT_PCT_home,
                 FG3_PCT_home,  AST_home,  REB_home,  HOME_TEAM_WINS
         );
     }

@@ -71,7 +71,7 @@ public class Disk {
             availBlocks.remove(blockId);
         }
 
-        return new Address(blockId, offset);
+        return new Address(offset, blockId);
     }
 
     public int getTotalNoOfRecords() {
@@ -118,6 +118,9 @@ public class Disk {
     }
 
     public Record retrieveRecord(Address address) {
+//        System.out.printf("block id: %d", address.getBlockID());
+//        System.out.printf("block offset: %d", address.getOffset());
+
         Block block = getBlock(address.getBlockID());
         Record record = block.getRecord(address.getOffset());
 

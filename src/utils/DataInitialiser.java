@@ -91,11 +91,9 @@ public class DataInitialiser {
 
             br.close();
             System.out.println("---------------");
-            System.out.println("Total no. of rows read: " + count);
+            System.out.println("Total no. of rows read (excl. row with col. names): " + count);
             System.out.println("Rows with missing values that will be ignored: " + rowsWithMissingCount);
             System.out.println("---------------");
-
-            disk.runExptOne();
 
             while(true) {
                 System.out.println("Please select one of the options below: ");

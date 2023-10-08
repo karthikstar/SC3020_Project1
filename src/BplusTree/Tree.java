@@ -73,7 +73,7 @@ public class Tree {
         }
         System.out.printf("\n\nNo. of Index Nodes the process accesses: %d\n", stats.getTotalNumberOfNodeReadQueries());
         System.out.printf("No. of Data Blocks the process accesses: %d\n", disk.getNoOfBlockAccess());
-        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f\n",
+        System.out.printf("Average of 'FG3_PCT_home' of the records accessed: %.2f\n",
                 (double) totalFG3PCTHome / totalRecordCount);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
@@ -91,11 +91,11 @@ public class Tree {
         System.out.println("---------EXPERIMENT FOUR---------");
         ExperimentStats stats = new ExperimentStats();
 
-        System.out.println("Movies with the 'numVotes' from 30,000 to 40,000, both inclusively: ");
+        System.out.println("Movies with the attribute 'FG_PCT_home' from 0.6 to 1.0, both inclusively: ");
         long startTime = System.nanoTime();
         ArrayList<Address> resultAdd = tree.searchValuesInRange(0.6f, 1.0f, root);
         long endTime = System.nanoTime();
-        double totalAverageRating = 0;
+        double totalFG3PCTHome = 0;
         int totalCount = 0;
         ArrayList<Record> results = new ArrayList<>();
         if (resultAdd != null) {
@@ -103,22 +103,22 @@ public class Tree {
                 Record record = disk.retrieveRecord(add);
                 System.out.print("\n From Indexing" + record);
                 results.add(record);
-                totalAverageRating += record.getFG3_PCT_home();
+                totalFG3PCTHome += record.getFG3_PCT_home();
                 totalCount++;
             }
         }
         System.out.printf("\n\nNo. of Index Nodes the process accesses: %d\n", stats.getTotalNumberOfNodeReadQueries());
         System.out.printf("No. of Data Blocks the process accesses: %d\n", disk.getNoOfBlockAccess());
-        System.out.printf("Average of 'averageRating's' of the records accessed: %.2f",
-                (double) totalAverageRating / totalCount);
+        System.out.printf("Average of 'FG3_PCT_home' of the records accessed: %.2f",
+                (double) totalFG3PCTHome / totalCount);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n", duration);
         startTime = System.nanoTime();
         int bruteForceAccessCount = disk.BFSearch(0.6f, 1);
         endTime = System.nanoTime();
-        System.out.printf("Number of Data Blocks Accessed by Brute Force (30000<=numVotes<=40000): %d",
+        System.out.printf("Number of Data Blocks Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d",
                 bruteForceAccessCount);
-        System.out.printf("\nLinear Time Accessed by Brute Force (30000<=numVotes<=40000): %d", endTime - startTime);
+        System.out.printf("\nLinear Time Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d", endTime - startTime);
         System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
 
         System.out.println("-----END OF EXPERIMENT FOUR------");
@@ -128,7 +128,7 @@ public class Tree {
         System.out.println("---------EXPERIMENT FIVE---------");
         ExperimentStats stats = new ExperimentStats();
 
-        System.out.println("-- Deleting all records with 'numVotes' of 1000 -- ");
+        System.out.println("-- Deleting all records with 'FG_PCT_home' below 0.35 inclusively -- ");
         long startTime = System.nanoTime();
         ArrayList<Address> deletedAdd = tree.deleteKey(0.35f);
 
@@ -140,12 +140,12 @@ public class Tree {
         System.out.printf("\nContent of the root node in updated B+ tree: %s\n", getRoot().keys);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        System.out.println("Number of Data Blocks Accessed by Brute Force (numVotes=1000):");
+        System.out.println("Number of Data Blocks Accessed by Brute Force (FG_PCT_home <= 0.35):");
         startTime = System.nanoTime();
         int bruteForceAccessCount = disk.BFSearch(0.35f);
         endTime = System.nanoTime();
-        System.out.printf("Number of Data Blocks Accessed by Brute Force (numVotes = 1000): %d", bruteForceAccessCount);
-        System.out.printf("\nLinear Time Accessed by Brute Force (numVotes = 1000): %d", endTime - startTime);
+        System.out.printf("Number of Data Blocks Accessed by Brute Force (FG_PCT_home <= 0.35): %d", bruteForceAccessCount);
+        System.out.printf("\nLinear Time Accessed by Brute Force (FG_PCT_home <= 0.35): %d", endTime - startTime);
         System.out.printf("\nNo. of Data Blocks accessed reduced in total: %d\n ", disk.getNoOfBlockAccessReduced());
 
         System.out.println("-----END OF EXPERIMENT FIVE------");
