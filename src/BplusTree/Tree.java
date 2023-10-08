@@ -140,7 +140,6 @@ public class Tree {
         System.out.printf("\nContent of the root node in updated B+ tree: %s\n", getRoot().keys);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        System.out.println("Number of Data Blocks Accessed by Brute Force (FG_PCT_home <= 0.35):");
         startTime = System.nanoTime();
         int bruteForceAccessCount = disk.BFSearch(0.35f);
         endTime = System.nanoTime();
