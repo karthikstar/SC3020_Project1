@@ -18,30 +18,27 @@ public class Tree {
         root = createTreeNode();
     }
 
-    public void printBPlusTreeHelper(Node node, String indent) {
-        if (node == null) {
-            return;
-        }
+    public void printTree(Node node, String pre) {
+        if (node == null) return;
         if (node.isLeaf()) {
             LeafNode leaf = (LeafNode) node;
-            System.out.print(indent + "LeafNode: ");
+            System.out.print(pre + "LeafNode: ");
             for (float key : leaf.getKeys()) {
                 System.out.print(key + " ");
             }
             System.out.println();
         } else {
             NonLeafNode nonLeaf = (NonLeafNode) node;
-            System.out.print(indent + "NonLeafNode: ");
+            System.out.print(pre + "NonLeafNode: ");
             for (float key : nonLeaf.getKeys()) {
                 System.out.print(key + " ");
             }
             System.out.println();
             for (Node child : nonLeaf.getChildren()) {
-                printBPlusTreeHelper(child, indent + "  ");
+                printTree(child, pre + "  ");
             }
 
         }
-
     }
     public static void runExptTwo(Tree tree) {
         System.out.println("---------EXPERIMENT TWO---------");
@@ -51,6 +48,8 @@ public class Tree {
         tree.countNumberOfLevels(Tree.getRoot());
         System.out.printf("Number of Levels: %d\n", stats.getTotalHeight());
         System.out.println("Root Node Contents: " + Tree.getRoot().keys);
+        System.out.println("B+ Tree Layout: ");
+        tree.printTree(Tree.getRoot(), " ");
         System.out.println("-----END OF EXPERIMENT TWO------");
     }
 
@@ -130,7 +129,7 @@ public class Tree {
 
         System.out.println("-- Deleting all records with 'FG_PCT_home' below 0.35 inclusively -- ");
         long startTime = System.nanoTime();
-        ArrayList<Address> deletedAdd = tree.deleteKey(0.35f);
+        ArrayList<Address> deletedAdd = tree.deleteKeysInRange(0.35f, root);
 
         disk.removeRecord(deletedAdd);
         long endTime = System.nanoTime();
@@ -151,9 +150,19 @@ public class Tree {
         System.out.println("-----END OF EXPERIMENT FIVE------");
     }
 
-    public ArrayList<Address> deleteKey(float key) {
-        int lowerBound = checkForLowerBound(key);
-        return (removeNode(root, null, -1, -1, key));
+    public ArrayList<Address> deleteKeysInRange (float maxKey, Node nodeToSearchFrom) {
+        ArrayList<Float> listOfKeysToDelete = searchValuesInRange2(0, maxKey, nodeToSearchFrom);
+        System.out.println("Keys to be deleted: " + listOfKeysToDelete);
+        ArrayList<Address> listOfAddresses = new ArrayList<>();
+        ArrayList<Address> listOfAddressesToDelete = new ArrayList<>();
+        for (float key : listOfKeysToDelete) {
+            listOfAddresses.addAll(removeNode(root, null, -1, -1, key));
+            if (listOfAddresses.size() > 0) {
+                listOfAddressesToDelete.addAll(listOfAddresses);
+                listOfAddresses.clear();
+            }
+        }
+        return listOfAddressesToDelete;
     }
 
     public static Node getRoot() {
@@ -231,6 +240,44 @@ public class Tree {
             int ptrIndex = nodeToSearchFrom.binarySearchUpperBound(minKey, true);
             Node childNode = ((NonLeafNode) nodeToSearchFrom).getSingleChild(ptrIndex);
             return (searchValuesInRange(minKey, maxKey, childNode));
+        }
+    }
+
+    public ArrayList<Float> searchValuesInRange2(float minKey, float maxKey, Node nodeToSearchFrom) {
+        ExperimentStats.addOneRangeQuery();
+        ArrayList<Float> resultArray = new ArrayList<>();
+        int ptrIndex = -1;
+        if (nodeToSearchFrom.isLeaf()) {
+            ptrIndex = nodeToSearchFrom.binarySearchUpperBound(minKey, false);
+            if (ptrIndex == -1) ptrIndex = 0;
+            LeafNode leaf = (LeafNode) nodeToSearchFrom;
+            while (true) {
+                if (ptrIndex == leaf.getNumberOfKeys()) {
+                    // No more next node to load.
+                    if (leaf.getRight() == null) break;
+                    // Iterate through the leaf nodes to find all relevant keys.
+                    leaf = leaf.getRight();
+                    // No existing index error check.
+                    //if (ptrIndex >= leaf.getNumberOfKeys()) throw new IllegalStateException("0 keys found due to invalid index.");
+                    ExperimentStats.addOneRangeQuery();
+                    ptrIndex = 0;
+                }
+                // If max key is reached. Stop adding to results.
+                if (leaf.getKeyAtIndex(ptrIndex) > maxKey) break;
+
+                // Add record addresses to results.
+                float key = leaf.getKeyAtIndex(ptrIndex);
+                //ArrayList<Address> addresses = leaf.getAddressesPointedByKey(key);
+                resultArray.add(key);
+
+                ptrIndex++;
+            }
+            return (resultArray.size() > 0 ? resultArray : null);
+        } else {
+            // Recursively go down tree until the leaf nodes.
+            ptrIndex = nodeToSearchFrom.binarySearchUpperBound(minKey, true);
+            Node childNode = ((NonLeafNode) nodeToSearchFrom).getSingleChild(ptrIndex);
+            return (searchValuesInRange2(minKey, maxKey, childNode));
         }
     }
 
@@ -335,8 +382,6 @@ public class Tree {
     }
 
 
-
-
     public ArrayList<Address> removeRecord (float key) {
         float lowerBoundKey = findLowerBoundKey(key);
         return removeNode(root, null, -99, -99, key);
@@ -356,7 +401,7 @@ public class Tree {
 
             } else {
                 LeafNode leafNode = (LeafNode) nodeToSearchFrom;
-                recordToDelete.addAll(leafNode.getAddressesPointedByKey(key));
+                if (leafNode.getAddressesPointedByKey(key) != null) recordToDelete.addAll(leafNode.getAddressesPointedByKey(key));
 
                 // Search for key index for error checking
                 int keyIndex = nodeToSearchFrom.binarySearchUpperBound(key, false);
@@ -644,6 +689,8 @@ public class Tree {
 
         }
 
+        ExperimentStats.deleteOneNode();
+
         int ptrIdx = nodeToMergeTo.binarySearchUpperBound(keyToRemove, true);
         int keyIdx = ptrIdx - 1;
 
@@ -733,6 +780,7 @@ public class Tree {
                 }
             }
         }
+        ExperimentStats.deleteOneNode();
 
         int lowerbound = checkForLowerBound(removedKey);
         float newLowerBound = 0;

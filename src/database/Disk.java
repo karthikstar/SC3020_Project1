@@ -248,7 +248,7 @@ public class Disk {
         }
 
         for(Record result: results){
-            System.out.printf("BFSearch - Found Record: %s\n", result);
+            //System.out.printf("BFSearch - Found Record: %s\n", result);
         }
 
         return noOfBlocksAccessed;
