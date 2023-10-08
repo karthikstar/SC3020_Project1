@@ -77,11 +77,11 @@ public class Tree {
                 (double) totalFG3PCTHome / totalRecordCount);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        startTime = System.nanoTime();
+        long startTime2 = System.nanoTime();
         int bruteForceAccessCount = disk.BFSearch(0.5f, 0.5f);
-        endTime = System.nanoTime();
+        long endTime2 = System.nanoTime();
         System.out.printf("Number of Data Blocks Accessed by Brute Force: %d\n", bruteForceAccessCount);
-        System.out.printf("Linear Time Accessed by Brute Force: %d nanoseconds\n", endTime - startTime);
+        System.out.printf("Linear Time Accessed by Brute Force: %d nanoseconds\n", endTime2 - startTime2);
         System.out.printf("Reduction In No. of Data Blocks accessed due to LRU Cache: %d\n ", disk.getNoOfBlockAccessReduced());
 
         System.out.println("-----END OF EXPERIMENT THREE------");
@@ -113,12 +113,12 @@ public class Tree {
                 (double) totalFG3PCTHome / totalCount);
         long duration = (endTime - startTime);
         System.out.printf("\nRunning time of retrieval process: %d nanoseconds\n", duration);
-        startTime = System.nanoTime();
+        long startTime2 = System.nanoTime();
         int bruteForceAccessCount = disk.BFSearch(0.6f, 1);
-        endTime = System.nanoTime();
+        long endTime2 = System.nanoTime();
         System.out.printf("Number of Data Blocks Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d\n",
                 bruteForceAccessCount);
-        System.out.printf("Linear Time Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d nanoseconds\n", endTime - startTime);
+        System.out.printf("Linear Time Accessed by Brute Force (0.6<=FG_PCT_home<=1): %d nanoseconds\n", endTime2 - startTime2);
         System.out.printf("Reduction In No. of Data Blocks accessed due to LRU Cache: %d\n ", disk.getNoOfBlockAccessReduced());
 
         System.out.println("-----END OF EXPERIMENT FOUR------");
@@ -140,11 +140,11 @@ public class Tree {
         System.out.printf("\nContent of the root node in updated B+ tree: %s\n", getRoot().keys);
         long duration = (endTime - startTime); // divide by 1000000 to get milliseconds.
         System.out.printf("Running time of retrieval process: %d nanoseconds\n", duration);
-        startTime = System.nanoTime();
+        long startTime2 = System.nanoTime();
         int bruteForceAccessCount = disk.BFSearch(0.35f);
-        endTime = System.nanoTime();
+        long endTime2 = System.nanoTime();
         System.out.printf("Number of Data Blocks Accessed by Brute Force (FG_PCT_home <= 0.35): %d\n", bruteForceAccessCount);
-        System.out.printf("Linear Time Accessed by Brute Force (FG_PCT_home <= 0.35): %d nanoseconds\n", endTime - startTime);
+        System.out.printf("Linear Time Accessed by Brute Force (FG_PCT_home <= 0.35): %d nanoseconds\n", endTime2 - startTime2);
         System.out.printf("Reduction In No. of Data Blocks accessed due to LRU Cache: %d\n ", disk.getNoOfBlockAccessReduced());
 
         System.out.println("-----END OF EXPERIMENT FIVE------");
