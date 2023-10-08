@@ -5,11 +5,14 @@ This project focuses on the design and implementation of a database management s
 ### Project Structure 
 Our project is structured into three primary packages:
 
-Utils - This package houses the DataInitialiser class, responsible for initializing data from a text file, parsing it, and preparing it for storage within the database.
+#### Utils
+This package houses the DataInitialiser class, responsible for initializing data from a text file, parsing it, and preparing it for storage within the database.
 
-Database - The Database package manages the storage infrastructure of our database management system. It handles data blocks, records, addresses, and disk management to ensure efficient data storage and retrieval.
+#### Database 
+The Database package manages the storage infrastructure of our database management system. It handles data blocks, records, addresses, and disk management to ensure efficient data storage and retrieval.
 
-BplusTree - This package encompasses the core components related to the B+ tree implementation. It includes classes and methods for constructing and managing B+ trees, as well as support for search, insertion, and deletion operations.
+#### BplusTree 
+This package encompasses the core components related to the B+ tree implementation. It includes classes and methods for constructing and managing B+ trees, as well as support for search, insertion, and deletion operations.
 
 ## Team members
 This project was developed and maintained by the following team members:  
