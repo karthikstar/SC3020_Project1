@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * The DataInitialiser Class handles reading of file, and generation of records from it
+ */
 public class DataInitialiser {
 
     public static final int BLOCK_SIZE = 400;
@@ -20,6 +23,11 @@ public class DataInitialiser {
     public static final int POINTER_SIZE = 8;
     public static final int KEY_SIZE = 4;
 
+    /**
+     * Handles the reading of the games.txt file line by line, generation of records, writing to the disk and insertion into the B+ Tree
+     * @param filepath the filepath of the data file
+     * @param diskCapacity the disk capacity entered by the user
+     */
     public static void readFile(String filepath, int diskCapacity) {
         try {
 
@@ -64,19 +72,11 @@ public class DataInitialiser {
                 int AST_home = Integer.parseInt(attributes[6]); //4
                 int REB_home = Integer.parseInt(attributes[7]); //4
                 int HOME_TEAM_WINS = Integer.parseInt(attributes[8]); //4
-
                 // Total 40 bytes
-
 //                System.out.println(GAME_DATE_EST);
 
                 Date date = new Date(GAME_DATE_EST);
                 String formattedDate = dateFormat.format(date);
-//                System.out.println(date);
-//                System.out.println(formattedDate);
-//
-//                System.out.println(TEAM_ID_home);
-//                System.out.println(PTS_HOME);
-//                System.out.println(FG_PCT_home);
 
 
                 Record newRecord = generateRecord(GAME_DATE_EST, TEAM_ID_home, PTS_HOME, FG_PCT_home, FT_PCT_home,
@@ -145,6 +145,19 @@ public class DataInitialiser {
 
     }
 
+    /**
+     * Handles the generation of Record Objects for each of the line read by readFile()
+     * @param GAME_DATE_EST a long value representing a date
+     * @param TEAM_ID_home an integer value
+     * @param PTS_HOME an integer value
+     * @param FG_PCT_home a float value
+     * @param FT_PCT_home a float value
+     * @param FG3_PCT_home a float value
+     * @param AST_home an integer value
+     * @param REB_home an integer value
+     * @param HOME_TEAM_WINS an integer value
+     * @return a Record Object
+     */
     public static Record generateRecord(long GAME_DATE_EST, int TEAM_ID_home, int PTS_HOME, float FG_PCT_home, float FT_PCT_home,
                                         float FG3_PCT_home, int AST_home, int REB_home, int HOME_TEAM_WINS) {
 

@@ -2,6 +2,11 @@ package database;
 
 import java.util.LinkedHashMap;
 
+/**
+ * This Cache class implements the LRU (least recently used) cache, which stores a certain number of Block objects.
+ * This LRU Cache is implemented using a LinkedHashMap.
+ * When cache full, least recently used block is removed from cache so that another block can be put into the cache
+ */
 public class Cache {
     // implement the LRU (least recently used) cache, which stores a certain number of block objects
 
@@ -9,11 +14,22 @@ public class Cache {
 
     private LinkedHashMap<Integer, Block> store; // to store the blocks in this cache
 
+    /**
+     * Creates the cache with the given capacity
+     * @param capacity the max no. of blocks that the cache can hold
+     */
     public Cache(int capacity) {
         this.store = new LinkedHashMap<>();
         this.CAPACITY = capacity;
     }
 
+    /**
+     * Handles placing block into cache, and associates the block with the specified key in the cache.
+     * If key already present in cache, we will replace that existing block with the new block
+     * If cache is full, the least recently used block will be evicted in order to insert the new block
+     * @param block the block being put into the cache
+     * @param key the key associated with the block
+     */
     public void putBlockInCache(Block block, int key) {
         if (store.containsKey(key)) {
             store.remove(key);

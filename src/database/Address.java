@@ -1,8 +1,10 @@
 package database;
 
 public class Address {
+    // Offset for record stored in the block
     private int offset;
 
+    // Id Of Block
     private int blockID;
 
     public Address(int offset, int blockId) {

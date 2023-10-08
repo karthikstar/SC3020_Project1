@@ -24,6 +24,11 @@ public class Disk {
 
     private int totalNoOfRecords = 0; // no. of records stored in disk
 
+    /**
+     * Handles instantiation of the Disk, Block and Cache
+     * @param blockSize an integer representing the size of the block
+     * @param diskCapacity an integer representing the capacity of disk
+     */
     public Disk(int blockSize, int diskCapacity) {
         this.blockSize = blockSize;
         this.diskCapacity = diskCapacity;
@@ -43,16 +48,25 @@ public class Disk {
 
     }
 
+    /**
+     * Handles the writing of record to the disk
+     * @param record the record to be written to the disk
+     * @return the Address of the given record in this Disk
+     */
     public Address writeRecToDisk(Record record) {
         totalNoOfRecords++;
-        int blockId = getFirstAvailableBlockId();
+        int blockId = getFirstAvailBlockId();
 
         Address recordAddress = this.insertRecIntoBlock(blockId, record);
 
         return recordAddress;
     }
 
-    private int getFirstAvailableBlockId() {
+    /**
+     * Find the first available block that can accept a new record that is being inserted in
+     * @return an integer representing blockId of the block
+     */
+    private int getFirstAvailBlockId() {
         if(availBlocks.isEmpty()) {
             return -1;
         } else {
@@ -61,6 +75,12 @@ public class Disk {
         }
     }
 
+    /**
+     * Insert a record into the given block
+     * @param blockId the id of the block that the record is being inserted in
+     * @param record the Record object to be inserted in
+     * @return the address of the block that was inserted into the block
+     */
     private Address insertRecIntoBlock(int blockId, Record record) {
         int offset = blocks[blockId].addRecordToBlock(record);
 
@@ -68,7 +88,7 @@ public class Disk {
 
         // Check if block still have available slots left
         if(!blocks[blockId].isBlockAvail()) {
-            availBlocks.remove(blockId);
+            availBlocks.remove(blockId); // if no slots left, take out from avail blocks
         }
 
         return new Address(offset, blockId);
@@ -117,10 +137,12 @@ public class Disk {
         return targetBlock;
     }
 
+    /**
+     * Retrieves the record based on the given address
+     * @param address the address of record to be retrieved
+     * @return a Record object corresponding to the record to be retrieved
+     */
     public Record retrieveRecord(Address address) {
-//        System.out.printf("block id: %d", address.getBlockID());
-//        System.out.printf("block offset: %d", address.getOffset());
-
         Block block = getBlock(address.getBlockID());
         Record record = block.getRecord(address.getOffset());
 
@@ -128,8 +150,8 @@ public class Disk {
     }
 
     /**
-     * Remove record at an address in the Disk
-     * @param addressArrayList
+     * Remove record at an address on the Disk
+     * @param addressArrayList a list of addresses whose corresponding records are to be removed
      */
     public void removeRecord(ArrayList<Address> addressArrayList) {
         for(Address address : addressArrayList) {
@@ -151,7 +173,7 @@ public class Disk {
 
     /**
      * Perform a brute-force (BF) linear scan method, by scanning data blocks 1 by one within the given lower limit and upper limit for FG_PCT_HOME
-     * For Expt.s 3 and 4
+     * For Expts 3 and 4
      * @param FG_PCT_HOME_LOWER_LIMIT lower limit of FG_PCT_home
      * @param FG_PCT_HOME_UPPER_LIMIT upper limit of FG_PCT_home
      * @return the number of data blocks accessed during the brute-force search
@@ -232,6 +254,9 @@ public class Disk {
         return noOfBlocksAccessed;
     }
 
+    /**
+     * Runs experiment one and print required output
+     */
     public void runExptOne() {
         System.out.println("---------EXPERIMENT ONE---------");
         System.out.printf("No. Of Records: %d\n" , this.getTotalNoOfRecords());

@@ -3,6 +3,9 @@ package database;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * The Record Class simulates a record being stored in the disk
+ */
 public class Record {
 
     private long GAME_DATE_EST;
@@ -28,6 +31,11 @@ public class Record {
         this.HOME_TEAM_WINS = HOME_TEAM_WINS;
     }
 
+    /**
+     * Generates a string represention of each Record object with its various attributes
+     * Reformats the GAME_DATE_EST data type for better viewability as well
+     * @return a String that provides information on the record's attributes
+     */
     @Override
     public String toString() {
         // reformat the date from long data type to string for better viewability

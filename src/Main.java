@@ -3,6 +3,9 @@ import utils.DataInitialiser;
 import java.io.File;
 import java.util.Scanner;
 
+/**
+ * The Main Class serves as the entry point into the application
+ */
 public class Main {
     private static final int MAX_DISK_CAPACITY_DEFAULT = (int) Math.pow(10, 6) * 500;
 
@@ -28,16 +31,20 @@ public class Main {
 
     }
 
+    /**
+     * Get a choice for disk capacity from the user, between the range 100 - 500 MB
+     * @return disk capacity choice entered by the user
+     */
     private static int getCapacityChoice() {
         int flag = 0;
         Scanner sc = new Scanner(System.in);
 
         while (flag == 0) {
             try {
-                System.out.println("Please enter your desired disk capacity (between 200-500MB):");
+                System.out.println("Please enter your desired disk capacity (between 100-500MB):");
 
                 int diskCapacity = sc.nextInt();
-                if (diskCapacity >= 200 && diskCapacity <= 500) {
+                if (diskCapacity >= 100 && diskCapacity <= 500) {
                     return (int) Math.pow(10, 6) * diskCapacity;
                 } else {
                     System.out.printf("Invalid disk capacity entered. Reverting back to default disk capacity of %d MB\n", (MAX_DISK_CAPACITY_DEFAULT / (int) Math.pow(10,6)));
