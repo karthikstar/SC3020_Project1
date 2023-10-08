@@ -13,10 +13,10 @@ BplusTree - This package encompasses the core components related to the B+ tree 
 
 ## Team members
 This project was developed and maintained by the following team members:
-Amabel Lim Hui Xin 
-Elangovan Karthikeyan 
-Tan Puay Jun, Klaus
-Tay Jia Ying, Denise 
+Amabel Lim Hui Xin   
+Elangovan Karthikeyan   
+Tan Puay Jun, Klaus  
+Tay Jia Ying, Denise   
 
 ## Installation guide
 ### Prerequisites
