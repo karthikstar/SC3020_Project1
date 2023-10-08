@@ -1,4 +1,4 @@
-# SC3020_Project1
+# Group 17 - SC3020/CZ4031 Project 1
 ### Project Overview 
 This project focuses on the design and implementation of a database management system's storage and indexing component using the Java programming language. Efficient data storage and retrieval are essential for the performance and scalability of database systems. The key feature of this project is hence the integration of a B+ tree index structure, which excels in maintaining balance for consistent performance. They store data in sorted order, enabling efficient range queries. The fanout structure of B+ Trees minimizes disk I/O, resulting in swift data retrieval. This data structure is especially well-suited for handling large datasets, making it indispensable for ensuring the efficiency of a database system.
 
