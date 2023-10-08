@@ -11,7 +11,7 @@ public class LeafNode extends Node{
     /**
      * Simulates the mapping of each key (or pointer) to its respective set of records. An arraylist is used for each mapping to handle duplicate records for each key to point to. With no duplicates, array list will only contain 1 address.
      */
-    public TreeMap<Integer, ArrayList<Address>> mapping;
+    public TreeMap<Float, ArrayList<Address>> mapping;
     /**
      * Represents a block of records on the disk
      */
@@ -30,31 +30,26 @@ public class LeafNode extends Node{
         setLeft(null);
     }
 
-    public ArrayList<Address> getAddressesPointedByKey (int key) {
+    public ArrayList<Address> getAddressesPointedByKey (float key) {
         return this.mapping.get(key);
     }
-    public void insertAddressesOfKey (int key, ArrayList <Address> block) {
+    public void insertAddressesOfKey (float key, ArrayList <Address> block) {
         mapping.put(key,block);
     }
-    public void deleteAddressesOfKey (int key) {
+    public void deleteAddressesOfKey (float key) {
         mapping.remove(key);
     }
 
-
-
-    public Address getRecord (int key) {
-        return this.records.get(key);
-    }
-    public void insertRecord (int key, Address record) {
+    public void insertRecord (float key, Address record) {
         //Empty Leaf Node
-        if (this.keys == null && this.records == null && this.mapping == null) {
+        if (this.keys == null || this.records == null || this.mapping == null) {
             this.records = new ArrayList<Address>();
             this.records.add (record);
 
-            this.mapping = new TreeMap<Integer, ArrayList<Address>>();
+            this.mapping = new TreeMap<Float, ArrayList<Address>>();
             this.mapping.put(key, records);
 
-            this.keys = new ArrayList <Integer>();
+            this.keys = new ArrayList <Float>();
             sortedInsert(this.keys, key);
 
         // If key exists in LeafNode, just attach new address to existing key address list.
@@ -67,7 +62,7 @@ public class LeafNode extends Node{
         // Below: Cases where keys dont exist in partially filled leaf node.
 
         //This is for the case where leafnode is not full.
-        else if (this.keys.size() < 30) { // NODE_SIZE
+        else if (this.keys.size() < NODE_SIZE) { // NODE_SIZE
             this.records = new ArrayList<Address> ();
             this.records.add(record);
 
@@ -81,7 +76,7 @@ public class LeafNode extends Node{
         }
     }
 
-    public Node findNodeFromRoot (int key, Node node) {
+    public Node findNodeFromRoot (float key, Node node) {
         if (node == null) {
             return null;
         } else {
@@ -93,15 +88,6 @@ public class LeafNode extends Node{
             }
         }
         return null;
-    }
-
-    public void sortedInsert (ArrayList<Integer> keys, int key) {
-        for (int i = 0; i < keys.size(); i++) {
-            if (keys.get(i) >= key) {
-                keys.add(i, key);
-                return;
-            }
-        }
     }
 
     public LeafNode getRight () {
@@ -121,7 +107,6 @@ public class LeafNode extends Node{
     public void deleteLeafNodeContents () {
         keys.clear();
         records.clear();
-        // DO I DELETE POINTERS TO NEXT/PREV NODE TOO?
     }
 
     @Override

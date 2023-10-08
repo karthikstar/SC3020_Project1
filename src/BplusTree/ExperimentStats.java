@@ -2,10 +2,10 @@ package BplusTree;
 
 public class ExperimentStats {
 
-    private static int totalNumberOfNodes;
-    private static int totalHeight;
-    private static int totalNumberOfNodeReadQueries;
-    private static int totalNumberOfRangeQueries;
+    private static int totalNumberOfNodes = 0;
+    private static int totalHeight = 0;
+    private static int totalNumberOfNodeReadQueries = 0;
+    private static int totalNumberOfRangeQueries = 0;
 
 
 
