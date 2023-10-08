@@ -87,7 +87,6 @@ public class DataInitialiser {
                 float key = newRecord.getFG_PCT_home();
                 tree.addRecord(key, address);
             }
-            tree.printBPlusTreeHelper(Tree.getRoot(), "");
 
             br.close();
             System.out.println("---------------");
